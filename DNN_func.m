@@ -1,7 +1,8 @@
-function [e,ftilde,u_list,vecV_list,x,f_list, Time_DNN, FLOPs_DNN] = DNN_func(k,L,s,act,L_in,L_out, L_vec,vecV,step_size,simtime,x,ke,ks,Gamma)
+function [e,ftilde,u_list,vecV_list,x,f_list] = DNN_func(k,L,s,act,L_in,L_out, L_vec,vecV,step_size,simtime,x,ke,ks,Gamma)
+
 % e=[0;0];
 time_length=simtime/step_size;
-Time_DNN = zeros(time_length,1);
+
 for i=1:time_length
 
     t=(i-1)*step_size;       %Time
@@ -17,7 +18,7 @@ for i=1:time_length
     
     
  
-    [Lambdas,Phi,Phi_prime, Time_DNN(i), FLOPs_DNN]=blockgrads_DNN(act,vecV,xda,k,L,L_in,L_out);
+    [Lambdas,Phi,Phi_prime]=blockgrads_DNN(act,vecV,xda,k,L,L_in,L_out);
     vecVdot=Gamma*Lambdas'*ei;
     
     vecV=vecV+step_size*vecVdot;
