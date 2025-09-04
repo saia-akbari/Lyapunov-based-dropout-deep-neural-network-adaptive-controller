@@ -3,7 +3,7 @@ clc; clear; close all;
 step_size=0.01;
 simtime=10;
 time_length=simtime/step_size;
-x=[5;1;-5; 1; 3];
+x=[5;1;-1];
 ke=15;
 ks=0.001;
 Gamma=100;  %Adaptation Gain
@@ -11,7 +11,7 @@ Gamma=100;  %Adaptation Gain
 
 %DNN Parameters
 
-s=5;   % Size of the State; 
+s=3;   % Size of the State; 
 k=25;   % Total Number of Hidden Layers 
 L=10;  % Width of Each Hidden Layer 
 
@@ -23,9 +23,9 @@ vecV=10*rand(L_vec,1);
 
 deltat = 20;
 
-[e_DNN,ftilde_DNN,u_list_DNN,vecV_list_DNN,x_DNN,f_list_DNN, Time_DNN, FLOPs_DNN] = ...
+[e_DNN,ftilde_DNN,u_list_DNN,vecV_list_DNN,x_DNN,f_list_DNN] = ...
     DNN_func(k,L,s,"tanh",L_in,L_out, L_vec,vecV,step_size,simtime,x,ke,ks,Gamma);
-[e_RDNN,ftilde_RDNN,u_list_RDNN,vecV_list_RDNN,x_RDNN,f_list_RDNN, Phi_prime, Time_RDNN, FLOPs_RDNN]=...
+[e_RDNN,ftilde_RDNN,u_list_RDNN,vecV_list_RDNN,x_RDNN,f_list_RDNN, Phi_prime]=...
     RDNN_func(k,L,s,2,deltat,"tanh",L_in,L_out, L_vec,vecV,step_size,simtime,x,ke,ks,Gamma);
 
 e_rms_DNN=norm(rms(e_DNN'));
@@ -57,8 +57,8 @@ figure(1)
     ylabel('$||e||$','Fontsize',16,'Interpreter','latex', 'FontName','Times New Roman')
     legend('DNN','Dropout DNN','Interpreter','latex','Fontsize',16,'Location','NorthEast','Orientation','Horizontal', 'FontName','Times New Roman')
         
-    set(gca, 'YLim', [-0.5 8.5], 'YTick', 0:2:8,...
-     'YTickLabel', 0:2:8);
+    set(gca, 'YLim', [-0.5 5.5], 'YTick', 0:1:5,...
+     'YTickLabel', 0:1:5);
     set(gca, 'XLim', [-0.2 10.2], 'XTick', 0:1:10,...
      'XTickLabel', 0:1:10);
     
@@ -68,8 +68,8 @@ figure(1)
     xlabel('Time (sec)','Fontsize',16,'Interpreter','latex', 'FontName','Times New Roman')
     legend('DNN','Dropout DNN','Interpreter','latex','Fontsize',16,'Location','NorthEast','Orientation','Horizontal', 'FontName','Times New Roman')
     
-    set(gca, 'YLim', [-10 260], 'YTick', 0:50:250,...
-     'YTickLabel', 0:50:250);
+    set(gca, 'YLim', [-10 160], 'YTick', 0:50:150,...
+     'YTickLabel', 0:50:150);
     set(gca, 'XLim', [-0.2 10.2], 'XTick', 0:1:10,...
      'XTickLabel', 0:1:10);
 
@@ -127,6 +127,3 @@ u_rms_RDNN=norm(rms(u_list_RDNN));
     RMS_Approximation_Error=[ftilde_rms_DNN;ftilde_rms_RDNN];
     Control_Inputs=[u_rms_DNN;u_rms_RDNN];
     Errors=table(Architecture,RMS_Tracking_Error,RMS_Approximation_Error,Control_Inputs)
-
-    timeDNN = norm(rms(Time_DNN))
-    timeRDNN = norm(rms(Time_RDNN))
