@@ -23,10 +23,10 @@ vecV=10*rand(L_vec,1);
 
 deltat = 20;
 
-[e_DNN,ftilde_DNN,u_list_DNN,vecV_list_DNN,x_DNN,f_list_DNN, Time_DNN, FLOPs_DNN] = ...
-    DNN_func(k,L,s,"tanh",L_in,L_out, L_vec,vecV,step_size,simtime,x,ke,ks,Gamma);
-[e_RDNN,ftilde_RDNN,u_list_RDNN,vecV_list_RDNN,x_RDNN,f_list_RDNN, Phi_prime, Time_RDNN, FLOPs_RDNN]=...
-    RDNN_func(k,L,s,2,deltat,"tanh",L_in,L_out, L_vec,vecV,step_size,simtime,x,ke,ks,Gamma);
+[e_DNN,ftilde_DNN,u_list_DNN,vecV_list_DNN,x_DNN,f_list_DNN, time_DNN] = ...
+    Pruning_func(k,L,s,10,deltat,"tanh",L_in,L_out, L_vec,vecV,step_size,simtime,x,ke,ks,Gamma);
+[e_RDNN,ftilde_RDNN,u_list_RDNN,vecV_list_RDNN,x_RDNN,f_list_RDNN, Phi_prime, time_RDNN]=...
+    RDNN_func(k,L,s,10,deltat,"tanh",L_in,L_out, L_vec,vecV,step_size,simtime,x,ke,ks,Gamma);
 
 e_rms_DNN=norm(rms(e_DNN'));
 ftilde_rms_DNN=norm(rms(ftilde_DNN'));
@@ -128,5 +128,4 @@ u_rms_RDNN=norm(rms(u_list_RDNN));
     Control_Inputs=[u_rms_DNN;u_rms_RDNN];
     Errors=table(Architecture,RMS_Tracking_Error,RMS_Approximation_Error,Control_Inputs)
 
-    timeDNN = norm(rms(Time_DNN))
-    timeRDNN = norm(rms(Time_RDNN))
+    

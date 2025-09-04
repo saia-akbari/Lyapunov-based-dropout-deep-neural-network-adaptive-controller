@@ -1,5 +1,5 @@
-function [e,ftilde,u_list,vecV_list,x,f_list, Phi_prime, Time_RDNN, FLOPs_RDNN] = RDNN_func(k,L,s,thresh,r,act,L_in,L_out, L_vec,vecV,step_size,simtime,x,ke,ks,Gamma)
-
+function [e,ftilde,u_list,vecV_list,x,f_list, Phi_prime, time_RDNN] = RDNN_func(k,L,s,thresh,r,act,L_in,L_out, L_vec,vecV,step_size,simtime,x,ke,ks,Gamma)
+tic
 act = "tanh";
 
 %thresh = 2;
@@ -7,7 +7,6 @@ act = "tanh";
 time_length=simtime/step_size;
 % n = [s+1 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4 3 4];
 n = [s+1, repmat(3, 1, 25)];
-Time_RDNN = zeros(time_length,1);
 
 R = cell(1,k);
 R{1} = eye(s,s);
@@ -55,7 +54,7 @@ for i=1:time_length
     
     
  
-    [Lambdas,Phi,Phi_prime, Time_RDNN(i), FLOPs_RDNN]=blockgrads_RDNN("tanh",R, vecV,xda,k,L,L_in,L_out);
+    [Lambdas,Phi,Phi_prime]=blockgrads_RDNN("tanh",R, vecV,xda,k,L,L_in,L_out);
     vecVdot=Gamma*Lambdas'*ei;
     
     vecV=vecV+step_size*vecVdot;
@@ -102,3 +101,4 @@ ftilde(:,i+1)=ftilde(:,i);
 % subplot(3,1,3)
 % plot(time,vecV_list)
 % ylim([-22 22])
+time_RDNN = toc
